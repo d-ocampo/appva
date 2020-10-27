@@ -1,0 +1,26 @@
+html { height: 100%; }
+body { background: #FFF; font: 400 1.5em/1.5 "Droid Serif", serif; color: #111; text-align: center; height: 100%; }
+
+h1 { font: 700 2.8em/1.2 "Droid Sans", sans-serif; }
+h2 { font: 700 1.5em/1.5 "Droid Sans", sans-serif; margin: 1em 0; }
+h3 { font: 700 1.0em/1.5 "Droid Sans", sans-serif; text-align: center; color: #FFF }
+h4 { font: 700 0.8em/1.5 "Droid Sans", sans-serif; text-align: left}
+
+
+
+.banner {
+    padding: 100px 0;
+    background: url('https://www.thoughtco.com/thmb/GZluealiB_o2HEdVMIgxENb9OUc=/768x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-163113170-5c4f1e6346e0fb00014c3781.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 500px;
+}
+
+#bannertext { width: 24em; position: fixed; top: 20%; left: 50%; border: .5em solid #fff; margin-left: -12em; padding: 2em 0; }
+
+.content { max-width: 35em; text-align: justify; margin: 0 auto; padding: 2em; }
+
+#content p { margin: 0 0 2em; }
+
+iframe{
+    overflow:hidden;
+}
