@@ -144,13 +144,12 @@ app.layout = html.Div([
         html.H3('Clusters'),
         dcc.Graph(id='graph-clusters',
                   figure=px.parallel_categories(data_reg, dimensions=['CLUSTER', 'Region','ANS'])
-)      
-
+        ),  
+        html.H3('ObservableHQ'),
+        html.Iframe(src=app.get_asset_url("prueba.html"), width = 900, height = 450),
     ],
         className="content",
     )
-
-
 ])
 
 #actualizar gráfico
@@ -175,4 +174,6 @@ def update_output(entidad, variable,departamento):
 
 # Running the server
 if __name__ == '__main__':
-    app.run_server(debug=True,host='0.0.0.0')
+#    app.run_server(debug=True,host='0.0.0.0')
+	app.run_server(debug=True)
+

@@ -21,6 +21,7 @@ h4 { font: 700 0.8em/1.5 "Droid Sans", sans-serif; text-align: left}
 
 #content p { margin: 0 0 2em; }
 
-iframe{
+iframe {
     overflow:hidden;
+    border-width: 0px;
 }
