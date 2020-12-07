@@ -11,6 +11,6 @@ app = dash.Dash(__name__,
                 ],
                 assets_external_path='./', 
                 )
-app.title = 'Alcaldía Bucaramanga'
+app.title = 'Visual Analytics - ESPACE'
 
 app.config.suppress_callback_exceptions=True

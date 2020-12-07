@@ -5,15 +5,39 @@ import base64
 from app_ import app
 from dash import callback_context as ctx
 
+
 from dash.dependencies import Input, Output, State
 # Data analytics library
 
+import os
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import json
 
+
+#Resources
+ans=[1968, 1975, 1982, 1990, 1999, 2006, 2011, 2016]
+
+
 # CSVS
+
+ruta='Data/'
+
+os.listdir(ruta)
+
+data=[]
+#Listar los archivos separados
+for archivo in os.listdir(ruta):
+    if 'RESUMEN' in archivo:
+        data.append(archivo)
+
+#Resúmen de región
+RN=pd.read_csv(ruta+data[1],sep=';')
+RRE=pd.read_csv(ruta+data[0],sep=';')
+RT=pd.read_csv(ruta+data[2],sep=';')
+RRA=pd.read_csv(ruta+data[3],sep=';')
+
 
 dia_fallecidos = pd.read_csv("Data/mortalidad_dia.csv")
 semana_fallecidos = pd.read_csv("Data/mortalidad_semana.csv")
@@ -60,17 +84,17 @@ top_cards = dbc.Row([
             [
                 dbc.CardBody(
                     [
-                        html.Span(html.I("add_alert", className="material-icons"),
-                                  className="float-right rounded w-40 danger text-center "),
+                        # html.Span(html.I("add_alert", className="material-icons"),
+                        #           className="float-right rounded w-40 danger text-center "),
                         html.H5(
-                            "Total Cases", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
-                        html.H4("17007"),
+                            "Year of census", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                        html.H4(id="year census"),
                     ],
 
                     className="pt-2 pb-2 box "
                 ),
             ],
-            color="danger",
+            # color="danger",
             outline=True,
             #style={"width": "18rem"},
         ),
@@ -81,18 +105,17 @@ top_cards = dbc.Row([
             [
 
                 dbc.CardBody(
-                    [html.Span(html.I("mood", className="material-icons"),
-                               className="float-right rounded w-40 primary text-center "),
+                    [
                         html.H5(
-                            "Total Recovered", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
-                        html.H4("15122"),
+                            "Total Population", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                        html.H4(id="total population"),
 
                      ],
 
                     className="pt-2 pb-2 box"
                 ),
             ],
-            color="success",
+            # color="success",
             outline=True,
             #style={"width": "18rem"},
         ),
@@ -104,17 +127,15 @@ top_cards = dbc.Row([
             [
                 dbc.CardBody(
                     [
-                        html.Span(html.I("error", className="material-icons"),
-                                  className="float-right rounded w-40 accent text-center "),
                         html.H5(
-                            "Total Actives", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
-                        html.H4("1177"),
+                            "Place", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                        html.H4(id="place"),
                     ],
 
                     className="pt-2 pb-2 box"
                 ),
             ],
-            color="info",
+            # color="info",
             outline=True,
             #style={"width": "18rem"},
         ),
@@ -126,17 +147,15 @@ top_cards = dbc.Row([
             [
                 dbc.CardBody(
                     [
-                        html.Span(html.I("local_hospital", className="material-icons"),
-                                  className="float-right rounded w-40 warn text-center "),
                         html.H5(
-                            "Total Deaths", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
-                        html.H4("702"),
+                            "Name", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                        html.H4(id="name of place"),
                     ],
 
                     className="pt-2 pb-2 box"
                 ),
             ],
-            color="warning",
+            # color="warning",
             outline=True,
             #style={"width": "18rem"},
         ),
@@ -205,7 +224,9 @@ home = html.Div([
                             [
                                 html.H3("Dashboard", style = {"color": "#66666"}),
                                 html.P(
-                                    "Here you can find graphs, data analysis and comments about COVID-19 in Bucaramanga City.",
+                                    '''Here you can find graphs, data analysis and comments about 
+                                    france census during 1968 and 2016
+                                    ''',
                                     className="card-text", style = {"font-size": "15px"},
                                 ),
                                 dbc.Button(
@@ -226,7 +247,8 @@ home = html.Div([
                                 html.H3("Spatial Model", style = {"color": "#66666"}),
 
                                 html.P(
-                                    "Spatial Model is a model can predict the numbers of infected people for COVID throught the time.",
+                                    '''Cluster Model is a model that gruops the municipalities of France by euclidean distance
+                                    of similarity during the years of the census''',
                                     className="card-text", style = {"font-size": "15px"},
                                 ),
                                 dbc.Button("Spatial Model",
@@ -322,32 +344,46 @@ dashboard = html.Div([
                             dbc.CardBody(
                                 [
 
-                                    dbc.ButtonGroup([
-                                        dbc.Button(
-                                            "Daily", id="pos_daily", className="btn btn-outline b-info  text-black"),
-                                        dbc.Button(
-                                            "Weekly", id="pos_weekly", className="btn btn-outline b-info  text-black"),
-                                    ],
-                                        className="float-right d-none d-lg-flex btn-group-sm btn-group",
-                                        id="but_positive"
+                                    dcc.Dropdown(
+                                        clearable=False,
+                                        # className="float-right",
+                                        id="name list",
+                                        style=dict(
+                                            width='50%',
+                                            verticalAlign="middle", 
+                                            # position = "fixed",
+                                            # top      = "0px",
+                                            # right    = "0px"
+                                        )
                                     ),
 
-                                    dbc.Checklist(
+                                    dbc.RadioItems(
                                         options=[
-                                            {"label": "Cummulative", "value": 1},
+                                            {"label": "Region", "value": 1},
+                                            {"label": "Department", "value": 0}
                                         ],
-                                        value=[],
-                                        id="pos_cum",
-                                        switch=True,
+                                        value=0,
+                                        id="base select",
+                                        # switch=True,
                                         className="md",
                                     ),
+                                    dcc.Slider(
+                                        min=min(ans),
+                                        max=max(ans),
+                                        step=None,
+                                        marks={
+                                            i: i for i in ans
+                                        },
+                                        value=ans[0],
+                                        id='dash slider'
+                                    ),  
 
 
-                                    html.H5("Positive cases",
+                                    html.H5("Drill down analysis",
                                             className="card-title"),
 
                                     dcc.Graph(
-                                        id='positives'),
+                                        id='dash drill'),
                                 ]
                             ),
                         ],
@@ -1016,46 +1052,46 @@ aboutus = html.Div([
 ])
 
 
-@app.callback(
-    Output('positives', 'figure'),
-    [Input('pos_daily', 'n_clicks'),
-     Input('pos_weekly', 'n_clicks'), Input('pos_cum', 'value')])
-def update_posfig(pos_daily, pos_weekly, pos_cum):
-    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+# @app.callback(
+#     Output('positives', 'figure'),
+#     [Input('pos_daily', 'n_clicks'),
+#      Input('pos_weekly', 'n_clicks'), Input('base select', 'value')])
+# def update_posfig(pos_daily, pos_weekly, base select):
+#     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if(len(pos_cum) == 1):
-        if(button_id == "pos_daily"):
-            return fig_dia_positivos_acu
-        elif(button_id == "pos_weekly"):
-            return fig_semana_positivos_acu
-        return fig_dia_positivos_acu
+#     if(len(base select) == 1):
+#         if(button_id == "pos_daily"):
+#             return fig_dia_positivos_acu
+#         elif(button_id == "pos_weekly"):
+#             return fig_semana_positivos_acu
+#         return fig_dia_positivos_acu
 
-    if(button_id == "pos_daily"):
-        return fig_dia_positivos
-    elif(button_id == "pos_weekly"):
-        return fig_semana_positivos
+#     if(button_id == "pos_daily"):
+#         return fig_dia_positivos
+#     elif(button_id == "pos_weekly"):
+#         return fig_semana_positivos
 
-    return fig_dia_positivos
+#     return fig_dia_positivos
 
 
 
-@app.callback(
-    Output('death', 'figure'),
-    [Input('death_daily', 'n_clicks'),
-     Input('death_weekly', 'n_clicks'), Input('death_cum', 'value')])
-def update_deathfig(pos_daily, pos_weekly, pos_cum):
-    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+# @app.callback(
+#     Output('death', 'figure'),
+#     [Input('death_daily', 'n_clicks'),
+#      Input('death_weekly', 'n_clicks'), Input('death_cum', 'value')])
+# def update_deathfig(pos_daily, pos_weekly, base select):
+#     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if(len(pos_cum) == 1):
-        if(button_id == "death_daily"):
-            return fig_dia_fallecidos_acu
-        elif(button_id == "death_weekly"):
-            return fig_semana_fallecidos_acu
-        return fig_dia_fallecidos_acu
+#     if(len(base select) == 1):
+#         if(button_id == "death_daily"):
+#             return fig_dia_fallecidos_acu
+#         elif(button_id == "death_weekly"):
+#             return fig_semana_fallecidos_acu
+#         return fig_dia_fallecidos_acu
 
-    if(button_id == "death_daily"):
-        return fig_dia_fallecidos
-    elif(button_id == "death_weekly"):
-        return fig_semana_fallecidos
+#     if(button_id == "death_daily"):
+#         return fig_dia_fallecidos
+#     elif(button_id == "death_weekly"):
+#         return fig_semana_fallecidos
 
-    return fig_dia_fallecidos
+#     return fig_dia_fallecidos

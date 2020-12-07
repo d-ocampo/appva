@@ -1,4 +1,4 @@
-from layouts import home, dashboard, aboutus, risk
+from layouts import home, dashboard, aboutus, risk, RN, RRE, RT, RRA
 
 from app_ import app
 from spatial import spatial
@@ -9,10 +9,216 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import math
 
+##Graph libraries
+import plotly.express as px
+import plotly.graph_objects as go
+
 
 server = app.server
 
 # Resources
+
+ans=[1968, 1975, 1982, 1990, 1999, 2006, 2011, 2016]
+
+cod_dep={
+    "01":"Ain",
+"02":"Aisne",
+"03":"Allier",
+"04":"Alpes-de-Haute-Provence",
+"05":"Hautes-Alpes",
+"06":"Alpes-Maritimes",
+"07":"Ardèche",
+"08":"Ardennes",
+"09":"Ariège",
+"10":"Aube",
+"11":"Aude",
+"12":"Aveyron",
+"13":"Bouches-du-Rhône",
+"14":"Calvados",
+"15":"Cantal",
+"16":"Charente",
+"17":"Charente-Maritime",
+"18":"Cher",
+"19":"Corrèze",
+"21":"Côte-d'Or",
+"22":"Côtes-d'Armor",
+"23":"Creuse",
+"24":"Dordogne",
+"25":"Doubs",
+"26":"Drôme",
+"27":"Eure",
+"28":"Eure-et-Loir",
+"29":"Finistère",
+"2A":"Corse-du-Sud",
+"2B":"Haute-Corse",
+"30":"Gard",
+"31":"Haute-Garonne",
+"32":"Gers",
+"33":"Gironde",
+"34":"Hérault",
+"35":"Ille-et-Vilaine",
+"36":"Indre",
+"37":"Indre-et-Loire",
+"38":"Isère",
+"39":"Jura",
+"40":"Landes",
+"41":"Loir-et-Cher",
+"42":"Loire",
+"43":"Haute-Loire",
+"44":"Loire-Atlantique",
+"45":"Loiret",
+"46":"Lot",
+"47":"Lot-et-Garonne",
+"48":"Lozère",
+"49":"Maine-et-Loire",
+"50":"Manche",
+"51":"Marne",
+"52":"Haute-Marne",
+"53":"Mayenne",
+"54":"Meurthe-et-Moselle",
+"55":"Meuse",
+"56":"Morbihan",
+"57":"Moselle",
+"58":"Nièvre",
+"59":"Nord",
+"60":"Oise",
+"61":"Orne",
+"62":"Pas-de-Calais",
+"63":"Puy-de-Dôme",
+"64":"Pyrénées-Atlantiques",
+"65":"Hautes-Pyrénées",
+"66":"Pyrénées-Orientales",
+"67":"Bas-Rhin",
+"68":"Haut-Rhin",
+"69":"Rhône",
+"70":"Haute-Saône",
+"71":"Saône-et-Loire",
+"72":"Sarthe",
+"73":"Savoie",
+"74":"Haute-Savoie",
+"75":"Paris",
+"76":"Seine-Maritime",
+"77":"Seine-et-Marne",
+"78":"Yvelines",
+"79":"Deux-Sèvres",
+"80":"Somme",
+"81":"Tarn",
+"82":"Tarn-et-Garonne",
+"83":"Var",
+"84":"Vaucluse",
+"85":"Vendée",
+"86":"Vienne",
+"87":"Haute-Vienne",
+"88":"Vosges",
+"89":"Yonne",
+"90":"Territoire de Belfort",
+"91":"Essonne",
+"92":"Hauts-de-Seine",
+"93":"Seine-Saint-Denis",
+"94":"Val-de-Marne",
+"95":"Val-d'Oise",
+"971":"Guadeloupe",
+"972":"Martinique",
+"973":"Guyane",
+"974":"La Réunion",
+"FF" : "faute de frappe"
+}
+
+cod_reg={
+    "01":"Guadeloupe",
+    "02":"Martinique",
+    "03":"Guyane",
+    "04":"La Réunion",
+    "11":"Île-de-France",
+    "24":"Centre-Val de Loire",
+    "27":"Bourgogne-Franche-Comté",
+    "28":"Normandie",
+    "32":"Hauts-de-France",
+    "44":"Grand Est",
+    "52":"Pays de la Loire",
+    "53":"Bretagne",
+    "75":"Nouvelle-Aquitaine",
+    "76":"Occitanie",
+    "84":"Auvergne-Rhône-Alpes",
+    "93":"Provence-Alpes-Côte d'Azur",
+    "94":"Corse",
+    "FF" : "faute de frappe"
+}
+
+
+## Códigos de variables
+cod_sexe={
+    1 : "Homme",
+    2 : "Femme"
+    }
+
+cod_stat={
+    "A" : "Marié",
+    "B" : "Non marié"
+    }
+
+cod_natio={
+    "000" : "Français de naissance",
+    "001" : "Français par acquisition",
+    "1IT" : "Italiens",
+    "1ES" : "Espagnols",
+    "1PT" : "Portugais",
+    "2**" : "Autres nationalités d'Europe",
+    "3DZ": "Algériens",
+    "3MA" : "Marocains",
+    "3TN": "Tunisiens",
+    "3**" : "Autres nationalités d'Afrique",
+    "4TR": "Turcs",
+    "***" : "Autres nationalités"
+    }
+
+cod_dipl={
+    "A" : "Aucun diplôme ou au mieux BEPC - brevet des collèges ou DNB",
+    "B" : "CAP - BEP",
+    "C" : "Baccalauréat (général - techno - pro)",
+    "D" : "Diplôme d'études supérieures",
+    "*" : "Personnes de moins de 15 ans (17 ans pour le RP 1975) ou étudiants - élèves"
+    }
+
+cod_typ={
+    1 : "Actifs ayant un emploi",
+    2 : "Chômeurs",
+    3 : "Étudiants ou élèves",
+    4 : "Militaires du contingent",
+    5 : "Anciens actifs",
+    6 : "Autres inactifs"
+    }
+
+cod_nes={
+    1 : "Agriculture",
+    2 : "Industrie",
+    3 : "BTP",
+    4 : "Tertiaire",
+    9 : "Inactifs ou chômeurs"
+    }
+
+cod_csp={
+    1 : "Agriculteurs",
+    2 : "Artisans-commerçants-chefs d'entreprise",
+    3 : "Cadres et professions intellectuelles supérieures",
+    4 : "Professions intermédiaires",
+    5 : "Employés",
+    6 : "Ouvriers",
+    8 : "Anciens actifs",
+    9 : "Inactifs et chômeurs n'ayant jamais travaillé"
+    }
+
+
+dict_variables={
+    'SEXE' :list(cod_sexe.values()),
+    'STAT_CONJ':list(cod_stat.values()),
+    'NATIO':list(cod_natio.values()),
+    'DIPL': list(cod_dipl.values()),
+    'TYP_ACT':list(cod_typ.values()),
+    'NES4':list(cod_nes.values()),
+    'CSP':list(cod_csp.values())
+    }
+
 
 # end resources
 
@@ -45,7 +251,8 @@ sidebar_header = dbc.Row(
                                          className="img-fluid w-50 text-center w-75 pt-5")], className="text-center"),
                        
                         dbc.Col([html.Img(src="/assets/images/unicote.png",
-                                         className="img-fluid w-50 text-center w-75 pt-5")], className="text-center"),                    ],
+                                         className="img-fluid w-50 text-center w-75 pt-5")], className="text-center"),                    
+                        ],
                     align="center",
                     no_gutters=True,
                     className="justify-content-center"
@@ -131,7 +338,7 @@ app.layout = html.Div([dcc.Location(id="url"),  sidebar, content2])
 
 # fin Navbar
 
-
+## Modelo de riesgo según enfermedad
 @app.callback(
     [dash.dependencies.Output('progress', 'value'),
     dash.dependencies.Output('progress', 'children')],
@@ -162,7 +369,7 @@ def update_output(slider, switches):
     return probability, f"{probability } %" if probability  >= 5 else ""
 
 
-
+# Establecer ruta de las páginas
 @app.callback(
     [Output(f"page-{i}-link", "active") for i in range(1, 4)],
     [Input("url", "pathname")],
@@ -214,7 +421,7 @@ def update_topTitle(pathname):
     elif pathname == "/page-5":
         return "Dashboard"
     elif pathname == "/page-2":
-        return "Spatial Model"
+        return "Cluster Model"
     elif pathname == "/page-3":
         return "Risk of Death"
     elif pathname == "/page-4":
@@ -222,10 +429,81 @@ def update_topTitle(pathname):
 
 
 
+##############################################
+#### Visual Analytics ########################
+##############################################
+
+
+###### Dash Board ################
+
+#Cambiar el valor de las tarjetas - lugar 
+@app.callback(
+    Output("place", "children"),
+    [Input("base select", "value")],
+)
+def place(value):
+    if value==1:
+        return "Region"
+    else: 
+        return "Department"
+
+
+#Cambiar el valor del dropdown 
+@app.callback(
+    Output("name list", "options"),
+    [Input("base select", "value")],
+)
+def list_names(value):
+    if value==1:
+        return [{'label': cod_reg[i], 'value': i} for i in cod_reg.keys()]
+    else: 
+        return [{'label': cod_dep[i], 'value': i} for i in cod_dep.keys()] 
+
+#Cambiar el nombre de la tarjeta 
+@app.callback(
+    Output("name of place", "children"),
+    [Input("name list", "value"),
+     Input("base select", "value"),],
+)
+def list_names(value,terrain):
+    if terrain==1:
+        return cod_reg[value]
+    else: 
+        return cod_dep[value]
+    
+#Cambiar el nombre de la tarjeta de año 
+@app.callback(
+    Output("year census", "children"),
+    [Input("dash slider", "value")],
+)
+def list_names(value):
+    return value
+
+# Gráfico de drill down en el dash board
+
+@app.callback(
+    Output("dash drill", "figure"),
+    [Input("dash slider", "value"),
+     Input("base select", "value"),
+     Input("name list", "value")
+     ],
+)
+def list_names(year, base,terreno):
+    prueba=RN[RN['ANS']==int(year)]
+    # print(year,base,terreno,len(prueba))
+ 
+    var='SEXE'
+    if base==1:
+        x=dict_variables[var]
+        y=prueba[prueba['REGION']==cod_reg[terreno]][dict_variables[var]].values.tolist()[0]
+    print(x,y)
+    fig = go.Figure([go.Bar(x=x, y=y)])
+    return fig
 
 
 
 if __name__ == "__main__":
     app.run_server(debug=False)
+    
 
 # Images etc
