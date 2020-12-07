@@ -13,7 +13,6 @@ import math
 server = app.server
 
 # Resources
-PLOTLY_LOGO = app.get_asset_url("images/bucaramanga_logo.png")
 
 # end resources
 
@@ -21,7 +20,8 @@ PLOTLY_LOGO = app.get_asset_url("images/bucaramanga_logo.png")
 # Top bar
 top_navbar = dbc.Navbar(
     [
-        dbc.NavbarBrand(["Covid-19 Bucaramanga"],
+        #Nombre de cada página, 
+        dbc.NavbarBrand(["Visual Analytics"],
                         id="top_title", className="ml-2 wd"),
 
     ],
@@ -41,10 +41,11 @@ sidebar_header = dbc.Row(
                 # Use row and col to control vertical alignment of logo / brand
                 dbc.Row(
                     [
-                        dbc.Col([html.Img(src=PLOTLY_LOGO,
+                        dbc.Col([html.Img(src="/assets/images/uniandes.png",
                                          className="img-fluid w-50 text-center w-75 pt-5")], className="text-center"),
                        
-                    ],
+                        dbc.Col([html.Img(src="/assets/images/unicote.png",
+                                         className="img-fluid w-50 text-center w-75 pt-5")], className="text-center"),                    ],
                     align="center",
                     no_gutters=True,
                     className="justify-content-center"
@@ -94,12 +95,12 @@ sidebar = dbc.Navbar([html.Div(
                                            ], href="/page-5", id="page-5-link", className="nav-header"),
 
                      dbc.NavLink([html.Span(html.I("map", className="material-icons"),
-                                           className="nav-icon"),  html.Span("Spatial Model", className="nav-text")
+                                           className="nav-icon"),  html.Span("Cluster Model", className="nav-text")
                                            ], href="/page-2", id="page-2-link", className="nav-header"),
 
-                     dbc.NavLink([html.Span(html.I("favorite", className="material-icons"),
-                                           className="nav-icon"),  html.Span("Risk of death", className="nav-text")
-                                           ], href="/page-3", id="page-3-link", className="nav-header"),
+                    #  dbc.NavLink([html.Span(html.I("favorite", className="material-icons"),
+                    #                        className="nav-icon"),  html.Span("Risk of death", className="nav-text")
+                    #                        ], href="/page-3", id="page-3-link", className="nav-header"),
 
 
                     dbc.NavLink([html.Span(html.I("supervisor_account", className="material-icons"),
@@ -117,7 +118,7 @@ sidebar = dbc.Navbar([html.Div(
 ),
 
 ],
-    color="#06102a",
+    color="#d7af60",
     dark=True,
     id="sidebar",
     className="mm-show",
@@ -209,7 +210,7 @@ def toggle_collapse(n, is_open):
 @app.callback(Output("top_title", "children"), [Input("url", "pathname")])
 def update_topTitle(pathname):
     if pathname in ["/", "/home"]:
-        return "Covid-19 Bucaramanga"
+        return "Paris - French demographic and services storyline"
     elif pathname == "/page-5":
         return "Dashboard"
     elif pathname == "/page-2":

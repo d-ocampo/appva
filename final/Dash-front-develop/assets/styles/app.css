@@ -2035,6 +2035,7 @@ body {
 .nav-text {
   display: block;
   line-height: 1.125rem;
+  color : rgba(75, 75, 75, 0.99);
   padding: 0.5625rem 0; }
   .nav > li > a .nav-text {
     font-weight: 500; }
@@ -2060,6 +2061,7 @@ body {
   line-height: inherit;
   margin-right: 1rem;
   top: 0;
+  color : rgba(75, 75, 75, 0.99);
   min-width: 1.5rem;
   text-align: center; }
   .nav-icon i {

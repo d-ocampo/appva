@@ -48,7 +48,7 @@ edad_mortalidad = px.bar(edad_egresos_fallecidos,
 fig_edad_mortalidad = px.line(edad_egresos_fallecidos,
                           x="Age", y="Identification", color="Status")
 
-fig_comor_day = px.line(comor_day, x="Day", y= ["Diabetes","Cancer", "Obesity", "Heart Disease", "Renal Insufficiency"])
+fig_comor_day = px.line(comor_day, x="Day", y= "Diabetes")
 
 figura3 = px.bar(sexo_egresos, x='Sex', y="Identification", color='Status')
 
@@ -155,7 +155,7 @@ top_cards = dbc.Row([
 home = html.Div([
     dbc.Jumbotron(
         [
-            html.Img(src="/assets/images/bga_rojo.png",
+            html.Img(src="/assets/images/francebanner.webp",
                      className="img-fluid")
         ], className="text-center"),
 
@@ -163,13 +163,25 @@ home = html.Div([
     dbc.Row(
 
         dbc.Col([
-
+#banner del home
             html.I(className="fa fa-bars",
                    id="tooltip-target-home",
                    style={"padding": "1rem", "transform" : "rotate(90deg)", "font-size": "2rem", "color": "#999999"}, ),
-
-            html.P('"The Coronavirus has changed the planet, modifying the way we live and the way we interact with other people. In Colombia the impact has not been made waiting, and municipalities like Bucaramanga are looking for new and better ways to face the current situation. That is why information becomes our main asset and data visualization methods, the best tool to facilitate decision-making."',
-            style = { "font-color": "#666666", "font-size": "16px", "margin": "3rem auto 0", "padding": "0 12rem"}, className="text-muted"
+# Descripción del problema
+            html.P('''
+                   Fast changes in population causes many issues for municipalities to fulfill inhabitants 
+                   needs. Municipalities evolve, increasing or decreasing population and services. 
+                   Stakeholders need to foresight demographic evolution to conceive public policies. 
+                   They could face new problems that other municipalities have already resolved in the past,
+                   but data about their evolution is often sparse and incomplete. In France consistent census
+                   data is available, but tools for analyzing demographic data series are rare. We propose a 
+                   visual tool for municipalities, which helps stakeholders to have a look on the trajectories followed 
+                   by other municipalities and find the ones that have, or had in the past, a similar development, to 
+                   understand their future evolution. In order to compare different French municipalities, we consider 
+                   harmonized historical census data from 1968 to 2016. This visual tool should give the possibility to 
+                   choose different multivariate comparison methods for data series.
+                   ''',
+            style = { "font-color": "#666666", "font-size": "16px", "margin": "1rem auto 0", "padding": "0 12rem"}, className="text-muted"
             
             ),
 
@@ -226,26 +238,27 @@ home = html.Div([
                     style={"width": "18rem"},
                 ),
 
-                dbc.Card(
-                    [
-                        dbc.CardImg(
-                            src="/assets/images/risk_death.jpeg", top=True),
-                        dbc.CardBody(
+                # dbc.Card(
+                #     [
+                #         dbc.CardImg(
+                #             src="/assets/images/risk_death.jpeg", top=True),
+                #         dbc.CardBody(
 
-                            [  html.H3("Risk of Death", style = {"color": "#66666"}),
+                #             [  html.H3("Risk of Death", style = {"color": "#66666"}),
 
-                                html.P(
-                                    "Model for calculated the probability of death due to COVID-19 and their relations with comorbidities and age.",
-                                    className="card-text", style = {"font-size": "15px"},
-                                ),
+                #                 html.P(
+                #                     "Model for calculated the probability of death due to COVID-19 and their relations with comorbidities and age.",
+                #                     className="card-text", style = {"font-size": "15px"},
+                #                 ),
 
-                                dbc.Button("Risk Death Model", color="primary",
-                                           href="/page-3", style={"align": "center"}),
-                            ],
-                            className="text-center"
-                        ),
-                    ],
-                    style={"width": "18rem", "margin": "0 0 0 1rem"},                )
+                #                 dbc.Button("Risk Death Model", color="primary",
+                #                            href="/page-3", style={"align": "center"}),
+                #             ],
+                #             className="text-center"
+                #         ),
+                #     ],
+                #     style={"width": "18rem", "margin": "0 0 0 1rem"},                
+                #     )
 
             ]),
 
@@ -270,7 +283,7 @@ home = html.Div([
 
                 dbc.Col (
 
-                    html.Img(src="/assets/images/mintic.jpeg", className="img-fluid"),
+                    html.Img(src="/assets/images/uniandes.png", className="img-fluid"),
                     className = "d-flex justify-content-center align-items-center",
 
 
@@ -278,24 +291,12 @@ home = html.Div([
 
                 dbc.Col (
 
-                    html.Img(src="/assets/images/alcaldia_bmanga.png", className="img-fluid"),
+                    html.Img(src="/assets/images/unicote.png", className="img-fluid"),
                     className = "d-flex justify-content-center align-items-center",
 
 
 
-                ),
-
-
-                dbc.Col (
-
-                    html.Img(src="/assets/images/correlation.jpeg", className="img-fluid"),
-                    className = "d-flex justify-content-center align-items-center",
-
-
-
-                ),
-
-                
+                ),              
 
 
             ], 
@@ -598,7 +599,9 @@ risk = html.Div([
                                 html.I(className="fa fa-question-circle",
                                        id="tooltip-target-risk-death",
                                        style={"padding": "1rem"}, ),
-                            dbc.Progress(id ="progress", style = {"height" : "50px", "vertical-align": "middle"}, bar_style={"display":"flex", "font-size": "18px"}),
+                            dbc.Progress(id ="progress", style = {"height" : "50px", "vertical-align": "middle"}, 
+                                        #  bar_style={"display":"flex", "font-size": "18px"}
+                                         ),
 
 
                         ]),
@@ -890,10 +893,10 @@ aboutus = html.Div([
 
             html.Div([
 
-                 dbc.CardImg(src="assets/images/profiles/Alejandro.jpeg",
+                 dbc.CardImg(src="assets/images/profiles/ocampo.jpeg",
                              top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
                  dbc.CardBody([
-                     html.H4("Alejandro Ospina",
+                     html.H4("David Ocampo",
                              className="card-title m-a-0 m-b-xs"),
                      html.Div([
                          html.A([
@@ -930,10 +933,10 @@ aboutus = html.Div([
 
             html.Div([
 
-                 dbc.CardImg(src="/assets/images/profiles/Fabian_gamboa.jpeg",
+                 dbc.CardImg(src="/assets/images/profiles/juan.jpeg",
                              top=True, className="img-circle" , style = {"margin-top": "1.125rem"}),
                  dbc.CardBody([
-                     html.H4("Fabian Gamboa",
+                     html.H4("Juan Felipe Torres",
                              className="card-title m-a-0 m-b-xs"),
                      html.Div([
                          html.A([
@@ -970,10 +973,10 @@ aboutus = html.Div([
 
             html.Div([
 
-                dbc.CardImg(src="/assets/images/profiles/Fabian.jpeg",
+                dbc.CardImg(src="/assets/images/profiles/quinonez.jpeg",
                             top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
                 dbc.CardBody([
-                    html.H4("Fabian Pallares",
+                    html.H4("Juan David Quiñonez",
                             className="card-title m-a-0 m-b-xs"),
                     html.Div([
                         html.A([
@@ -988,7 +991,7 @@ aboutus = html.Div([
 
                     ], className="block clearfix m-b"),
                     html.P(
-                        "Systems Engineering Student. Emphasis on Information and Management Systems",
+                        "Statistician",
                         className="text-muted",
                     ),
 
@@ -1006,207 +1009,8 @@ aboutus = html.Div([
 
         ),
 
-        dbc.Card([
-
-            html.Div([
-
-                dbc.CardImg(src="/assets/images/profiles/Jhon.jpeg",
-                            top=True, className="img-circle",  style = {"margin-top": "1.125rem"}),
-                dbc.CardBody([
-                    html.H4("Jhon Alexis Parra",
-                             className="card-title m-a-0 m-b-xs"),
-                    html.Div([
-                        html.A([
-                            html.I(className="fa fa-linkedin"),
-                            html.I(className="fa fa-linkedin cyan-600"),
-                        ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/jhon-alexis-parra-abril-0a935515a/"),
-
-                        html.A([
-                            html.I(className="fa fa-envelope"),
-                            html.I(className="fa fa-envelope red-600"),
-                        ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:jhalpaab@gmail.com"),
-
-                    ], className="block clearfix m-b"),
-                    html.P(
-                        "MSc in Business Student, Electronic Engineer and Business Administrator.",
-                        className="text-muted",
-                    ),
-
-                ]
-
-                ),
-
-            ],
-                className="opacity_1",
-            ),
-
-
-        ],
-            className="text-center",
-
-        ),
-
-
-
-
     ]),
-    html.Br(),
-    dbc.CardDeck([
 
-        dbc.Card([
-
-            html.Div([
-
-                dbc.CardImg(src="/assets/images/profiles/Jimmy.jpeg",
-                            top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
-                dbc.CardBody([
-                 html.H4("Jimmy Pulido",
-                         className="card-title m-a-0 m-b-xs"),
-                 html.Div([
-                     html.A([
-                          html.I(className="fa fa-linkedin"),
-                          html.I(className="fa fa-linkedin cyan-600"),
-                          ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/jimmy-pulido-arias-0639411b3/"),
-
-                     html.A([
-                         html.I(className="fa fa-envelope"),
-                         html.I(className="fa fa-envelope red-600"),
-                     ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:jiapulidoar@gmail.com"),
-
-                 ], className="block clearfix m-b"),
-                 html.P(
-                     "Computer System Engineering Student.",
-                     className="text-muted",
-                 ),
-
-                 ]
-
-                ),
-
-            ],
-                className="opacity_1"
-            ),
-
-
-        ],
-            className="text-center",
-
-        ),
-
-
-
-        dbc.Card([
-
-            html.Div([
-
-                dbc.CardImg(src="/assets/images/profiles/Luz.jpeg",
-                            top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
-                dbc.CardBody([
-                 html.H4("Luz Dary Vanegas",
-                         className="card-title m-a-0 m-b-xs"),
-                 html.Div([
-                     html.A([
-                            html.I(className="fa fa-linkedin"),
-                            html.I(className="fa fa-linkedin cyan-600"),
-                            ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/luz-dary-vanegas-penagos-a8517958"),
-
-                     html.A([
-                            html.I(className="fa fa-envelope"),
-                            html.I(className="fa fa-envelope red-600"),
-                            ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:luzdaryvanegaspenagos@gmail.com"),
-
-                 ], className="block clearfix m-b"),
-                 html.P(
-                     "Economist,  Statistician Especialist, Fraud Prevention Lead in PayU",
-                     className="text-muted",
-                 ),
-
-                 ]
-
-                ),
-
-            ],
-                className="opacity_1"
-            ),
-
-
-        ],
-            className="text-center",
-
-        ),
-
-        dbc.Card([
-
-            html.Div([
-
-                dbc.CardImg(src="/assets/images/profiles/Wilmer.jpeg",
-                            top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
-                dbc.CardBody([
-                 html.H4("Wilmer Pineda",
-                         className="card-title m-a-0 m-b-xs"),
-                 html.Div([
-                     html.A([
-                         html.I(className="fa fa-linkedin"),
-                         html.I(className="fa fa-linkedin cyan-600"),
-                     ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/wilmer-pineda-85ab7262"),
-
-                     html.A([
-                         html.I(className="fa fa-envelope"),
-                         html.I(className="fa fa-envelope red-600"),
-                     ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:wpinedar@unal.edu.co"),
-
-                 ], className="block clearfix m-b"),
-                 html.P(
-                     "Mathematician, MSc in Mathematics, PhD (c) in Statistics. Professor at Universidad Santo Tomás . Data Scientist at the Superintendencia de Servicios Públicos.",
-                     className="text-muted",
-                 ),
-
-                 ]
-
-                ),
-
-            ],
-                className="opacity_1"
-            ),
-
-
-        ],
-            className="text-center",
-
-        ),
-
-        dbc.Card([
-
-            html.Div([
-
-
-                 dbc.CardImg(src="/assets/images/profiles/bucaramanga.jpeg",
-                             top=True, style = {"margin-top": "1.125rem"}),
-                 dbc.CardBody([
-
-                     html.P(
-                         "Greetings to Bucaramanga Town Hall.",
-                         className="text-muted",
-                     ),
-
-                 ]
-
-                 ),
-
-                 ],
-                className="opacity_1"
-            ),
-
-
-        ],
-            className="text-center",
-
-        ),
-
-
-
-
-    ]),
 
 
 ])
