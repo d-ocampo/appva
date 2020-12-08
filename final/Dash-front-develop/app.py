@@ -1,4 +1,5 @@
-from layouts import home, dashboard, aboutus, risk, RN, RRE, RT, RRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables
+from layouts import home, dashboard, aboutus,  RN, RRE, RT, RRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables
+from lay import  risk
 
 from app_ import app
 from spatial import spatial
@@ -297,6 +298,8 @@ def list_names(year, base,terreno,var):
     if base==1:
         x=dict_variables[var]
         y=prueba[prueba['REGION']==cod_reg[terreno]][dict_variables[var]].values.tolist()[0]
+    fig2 = px.bar(prueba, y=dict_variables[var], x='REGION')
+
     fig = go.Figure([go.Bar(x=x, y=y)])
     return fig, total
 
