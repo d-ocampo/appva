@@ -1,12 +1,66 @@
+import dash_core_components as dcc
+import dash_bootstrap_components as dbc
+import dash_html_components as html
+import base64
+from app_ import app
+from dash import callback_context as ctx
+
+
+from dash.dependencies import Input, Output, State
+# Data analytics library
+
+import os
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import json
+
+
+dia_fallecidos = pd.read_csv("Data/mortalidad_dia.csv")
+semana_fallecidos = pd.read_csv("Data/mortalidad_semana.csv")
+dia_positivos = pd.read_csv("Data/casos_positivos_dia.csv")
+semana_positivos = pd.read_csv("Data/casos_positivos_semana.csv")
+edad_egresos_fallecidos = pd.read_csv("Data/edad_egresos_fallecidos.csv")
+sexo_egresos = pd.read_csv("Data/sexo_egresos.csv")
+comor_day = pd.read_csv("Data/comorbilidades_dia.csv", delimiter = ";")
+#comor_week = pd.read_csv("Data/comorbilidades_semana.csv")
+
+
+# Figuras
+fig_dia_fallecidos = px.line(dia_fallecidos, x="day", y="cases")
+fig_dia_fallecidos_acu = px.line(dia_fallecidos, x="day", y="cases_cummulative")
+
+fig_semana_fallecidos = px.line(semana_fallecidos, x="week", y="cases")
+fig_semana_fallecidos_acu = px.line(
+    semana_fallecidos, x="week", y="cases_cummulative")
+
+fig_dia_positivos = px.line(dia_positivos, x="day", y="cases")
+fig_dia_positivos_acu = px.line(dia_positivos, x="day", y="cases_cummulative")
+
+fig_semana_positivos = px.line(semana_positivos, x="week", y="cases")
+fig_semana_positivos_acu = px.line(
+    semana_positivos, x="week", y="cases_cummulative")
+
+
+edad_mortalidad = px.bar(edad_egresos_fallecidos,
+                          x="Age", y="Identification", color="Status")
+
+fig_edad_mortalidad = px.line(edad_egresos_fallecidos,
+                          x="Age", y="Identification", color="Status")
+
+fig_comor_day = px.line(comor_day, x="Day", y= "Diabetes")
+
+figura3 = px.bar(sexo_egresos, x='Sex', y="Identification", color='Status')
+
+
+
+
 # Risk Model --------------------------------------------------------------------------
 
 # Layout definition
 
 risk = html.Div([
 
-    #Top definition 
-    top_cards,
-    
 
 
     dbc.Card(
