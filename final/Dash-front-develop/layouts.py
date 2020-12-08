@@ -317,7 +317,7 @@ top_cards = dbc.Row([
                 dbc.CardBody(
                     [
                         html.H5(
-                            "Total Population", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                            "Total Population of France", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
                         html.H4(id="total population"),
 
                      ],
@@ -436,6 +436,7 @@ home = html.Div([
                                 html.P(
                                     '''Here you can find graphs, data analysis and comments about 
                                     france census during 1968 and 2016
+                                    
                                     ''',
                                     className="card-text", style = {"font-size": "15px"},
                                 ),
@@ -457,7 +458,7 @@ home = html.Div([
                                 html.H3("Spatial Model", style = {"color": "#66666"}),
 
                                 html.P(
-                                    '''Cluster Model is a model that gruops the municipalities of France by euclidean distance
+                                    '''Cluster Model is a model that groups the municipalities of France by euclidean distance
                                     of similarity during the years of the census''',
                                     className="card-text", style = {"font-size": "15px"},
                                 ),
@@ -620,52 +621,11 @@ dashboard = html.Div([
                         [
                             dbc.CardBody(
                                 [
-                                    dbc.ButtonGroup([
-                                        dbc.Button(
-                                            "Daily", id="death_daily", className="btn btn-outline b-info  text-black"),
-                                        dbc.Button(
-                                            "Weekly", id="death_weekly", className="btn btn-outline b-info  text-black"),
-                                    ],
-                                        className="float-right d-none d-lg-flex btn-group-sm btn-group"
-                                    ),
-
-                                    dbc.Checklist(
-                                        options=[
-                                            {"label": "Cummulative", "value": 1},
-                                        ],
-                                        value=[],
-                                        id="death_cum",
-                                        switch=True,
-                                        className="md",
-                                    ),
-                                    html.H5("Deaths",
-                                            className="card-title"),
-                                    dcc.Graph(
-                                        figure=fig_dia_fallecidos, id='death'),
-                                ]
-                            ),
-                        ],
-                    )
-                ],
-                className="mt-1 mb-2 pl-3 pr-3"
-            ),
-        ],
-    ),
-
-
-    dbc.Row(
-        [
-            dbc.Col(
-                [
-                    dbc.Card(
-                        [
-                            dbc.CardBody(
-                                [
-                                    html.H5("Number of Covid-19 cases by age",
+                                    html.H5("Regions Analysis",
                                             className="card-title"),
 
                                     dcc.Graph(figure=edad_mortalidad,
-                                              id='spatial_model_lines'),
+                                              id='dash region'),
                                 ]
                             ),
                         ],
@@ -680,11 +640,11 @@ dashboard = html.Div([
                         [
                             dbc.CardBody(
                                 [
-                                    html.H5("Status by sex",
+                                    html.H5("Time Analysis",
                                             className="card-title"),
 
                                     dcc.Graph(figure=figura3,
-                                              id='spatial_model_lines'),
+                                              id='dash time'),
                                 ]
                             ),
                         ],

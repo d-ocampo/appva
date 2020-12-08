@@ -103,9 +103,9 @@ sidebar = dbc.Navbar([html.Div(
                                            className="nav-icon"),  html.Span("Cluster Model", className="nav-text")
                                            ], href="/page-2", id="page-2-link", className="nav-header"),
 
-                    #  dbc.NavLink([html.Span(html.I("favorite", className="material-icons"),
-                    #                        className="nav-icon"),  html.Span("Risk of death", className="nav-text")
-                    #                        ], href="/page-3", id="page-3-link", className="nav-header"),
+                     dbc.NavLink([html.Span(html.I("favorite", className="material-icons"),
+                                           className="nav-icon"),  html.Span("Exploration", className="nav-text")
+                                           ], href="/page-3", id="page-3-link", className="nav-header"),
 
 
                     dbc.NavLink([html.Span(html.I("supervisor_account", className="material-icons"),
@@ -280,23 +280,25 @@ def list_names(value):
 # Gráfico de drill down en el dash board
 
 @app.callback(
-    Output("dash drill", "figure"),
+    [Output("dash drill", "figure"),
+     Output("total population", "children"),],
     [Input("dash slider", "value"),
      Input("base select", "value"),
-     Input("name list", "value")
+     Input("name list", "value"),
+     Input("variable", "value")
      ],
 )
-def list_names(year, base,terreno):
+def list_names(year, base,terreno,var):
     prueba=RN[RN['ANS']==int(year)]
     # print(year,base,terreno,len(prueba))
- 
-    var='SEXE'
+    total=round(prueba[dict_variables["SEXE"]].sum().sum())
+    total="{:,}".format(int(total))
+    print(total)
     if base==1:
         x=dict_variables[var]
         y=prueba[prueba['REGION']==cod_reg[terreno]][dict_variables[var]].values.tolist()[0]
-    print(x,y)
     fig = go.Figure([go.Bar(x=x, y=y)])
-    return fig
+    return fig, total
 
 
 
