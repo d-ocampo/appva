@@ -1,4 +1,4 @@
-from layouts import home, dashboard, aboutus,  RN, RRE, RT, RRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables,dict_base,nombre_variables, seleccion_base
+from layouts import home, dashboard, aboutus , RN, RRE, RT, RRA, DN, DRE, DT, DRA, CRN, CRRE, CRT, CRRA, CDN, CDRE, CDT, CDRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables,dict_base,nombre_variables, seleccion_base, CRN, seleccion_cluster
 from lay import  risk
 
 from app_ import app
@@ -13,6 +13,8 @@ import math
 ##Graph libraries
 import plotly.express as px
 import plotly.graph_objects as go
+
+import pandas as pd
 
 
 server = app.server
@@ -222,7 +224,7 @@ def update_topTitle(pathname):
     elif pathname == "/page-2":
         return "Cluster Model"
     elif pathname == "/page-3":
-        return "Risk of Death"
+        return "Service Exploration"
     elif pathname == "/page-4":
         return "About us"
 
@@ -359,14 +361,81 @@ def analysis_name(base,opcion):
         text='Analysis of "Deparment de '+ dict_base[opcion]+'"'      
     return text
 
+####################################################
+########## CLuster Model ###########################
+####################################################
+
+# Cluster por años
+
+#Graficar el cluster por año
+@app.callback(
+    Output("cluster time", "figure"),
+    [Input("cluster slider", "value"),
+     Input("cluster base", "value"),
+     Input("cluster option", "value")
+     ],
+)
+def cluster_time(ans,base,opcion):
+    cluster=seleccion_cluster(base, opcion)
+    cluster['ANS']=cluster['ID'].apply(lambda x:  x[-4:])
+    anio=cluster[cluster['ANS']==str(ans)]
+    final=pd.DataFrame()
+    for i in anio.index:
+        grupo=anio.at[i,'CLUSTER']
+        ciudad=anio.at[i,'ID']
+        cluster[cluster['CLUSTER']==grupo]
+        iteracion=pd.DataFrame()
+        iteracion['RELATION']=cluster[cluster['CLUSTER']==grupo]['ID']
+        iteracion.insert(0, 'CLUSTER', grupo)
+        iteracion.insert(0, 'ORIGIN', ciudad[:-7])
+        final=pd.concat([final,iteracion]) 
+    fig = px.treemap(final, path=['CLUSTER', 'ORIGIN','RELATION'])
+    return fig
+
+#Cambiar el valor del dropdown 
+@app.callback(
+    Output("cluster list", "options"),
+    [Input("cluster base", "value")],
+)
+def list_names(value):
+    if value==0:
+        return [{'label': cod_reg[i], 'value': i} for i in cod_reg.keys()]
+    else: 
+        return [{'label': cod_dep[i], 'value': i} for i in cod_dep.keys()] 
 
 
 
+#Graficar el cluster por año
+@app.callback(
+    Output("cluster zone", "figure"),
+    [Input("cluster ans", "value"),
+     Input("cluster list", "value"),
+     Input("cluster base", "value"),
+     Input("cluster option", "value")
+     ],
+)
+def cluster_time(ans,terreno,base,opcion):
+    if int(base)==0:
+        zona=str(cod_reg[terreno])+" | "+ str(ans)
+    else:
+        zona=str(cod_dep[terreno])+" | "+ str(ans)
+    print(zona)
+    cluster=seleccion_cluster(base, opcion)
+    grupo=cluster[cluster["ID"]==zona]['CLUSTER'].values[0]
+    seleccion=pd.DataFrame()
+    seleccion['RELATION']=cluster[cluster['CLUSTER']==grupo]['ID']
+    seleccion.insert(0, 'ORIGIN', zona)
+    seleccion.insert(0, 'CLUSTER', grupo)
+    seleccion['ANS'] = seleccion['RELATION'].apply(lambda x:  x[-4:])
+    seleccion['RELATION']=seleccion['RELATION'].apply(lambda x:  x[:-6])
+    fig=px.parallel_categories(seleccion, dimensions=['ORIGIN','RELATION','ANS'])
+    return fig
 
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=False,
+                   host ='0.0.0.0')
     
 
 # Images etc

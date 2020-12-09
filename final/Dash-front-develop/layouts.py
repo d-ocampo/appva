@@ -258,6 +258,26 @@ def seleccion_base(base,opcion):
         df=DRA
     return df
 
+def seleccion_cluster(base,opcion):
+    df = pd.DataFrame()
+    if base == 0  and opcion == 1:
+        df=CRN
+    elif base == 0  and opcion == 2:
+        df=CRT
+    elif base == 0  and opcion == 3:
+        df=CRRE
+    elif base == 0  and opcion == 4:
+        df=CRRA
+    elif base == 1  and opcion == 1:
+        df=CDN
+    elif base == 1  and opcion == 2:
+        df=CDT
+    elif base == 1  and opcion == 3:
+        df=CDRE
+    elif base == 1  and opcion == 4:
+        df=CDRA
+    return df
+
 
 # CSVS
 
@@ -284,44 +304,20 @@ DRE=pd.read_csv(ruta+'RESUMEN_DEP_RES_18.csv',sep=';')
 DT=pd.read_csv(ruta+'RESUMEN_DEP_TRA_18.csv',sep=';')
 DRA=pd.read_csv(ruta+'RESUMEN_DEP_RAN_18.csv',sep=';')
 
+#Cluster por región
+CRN=pd.read_csv(ruta+'CLUSTER_RESUMEN_REG_NAIS.csv',sep=';')
+CRRE=pd.read_csv(ruta+'CLUSTER_RESUMEN_REG_RES_18.csv',sep=';')
+CRT=pd.read_csv(ruta+'CLUSTER_RESUMEN_REG_TRA_18.csv',sep=';')
+CRRA=pd.read_csv(ruta+'CLUSTER_RESUMEN_REG_RAN_18.csv',sep=';')
 
-
-dia_fallecidos = pd.read_csv("Data/mortalidad_dia.csv")
-semana_fallecidos = pd.read_csv("Data/mortalidad_semana.csv")
-dia_positivos = pd.read_csv("Data/casos_positivos_dia.csv")
-semana_positivos = pd.read_csv("Data/casos_positivos_semana.csv")
-edad_egresos_fallecidos = pd.read_csv("Data/edad_egresos_fallecidos.csv")
-sexo_egresos = pd.read_csv("Data/sexo_egresos.csv")
-comor_day = pd.read_csv("Data/comorbilidades_dia.csv", delimiter = ";")
-#comor_week = pd.read_csv("Data/comorbilidades_semana.csv")
-
-
-# Figuras
-fig_dia_fallecidos = px.line(dia_fallecidos, x="day", y="cases")
-fig_dia_fallecidos_acu = px.line(dia_fallecidos, x="day", y="cases_cummulative")
-
-fig_semana_fallecidos = px.line(semana_fallecidos, x="week", y="cases")
-fig_semana_fallecidos_acu = px.line(
-    semana_fallecidos, x="week", y="cases_cummulative")
-
-fig_dia_positivos = px.line(dia_positivos, x="day", y="cases")
-fig_dia_positivos_acu = px.line(dia_positivos, x="day", y="cases_cummulative")
-
-fig_semana_positivos = px.line(semana_positivos, x="week", y="cases")
-fig_semana_positivos_acu = px.line(
-    semana_positivos, x="week", y="cases_cummulative")
+#Cluster por departamento
+CDN=pd.read_csv(ruta+'CLUSTER_RESUMEN_DEP_NAIS.csv',sep=';')
+CDRE=pd.read_csv(ruta+'CLUSTER_RESUMEN_DEP_RES_18.csv',sep=';')
+CDT=pd.read_csv(ruta+'CLUSTER_RESUMEN_DEP_TRA_18.csv',sep=';')
+CDRA=pd.read_csv(ruta+'CLUSTER_RESUMEN_DEP_RAN_18.csv',sep=';')
 
 
 
-edad_mortalidad = px.bar(edad_egresos_fallecidos,
-                          x="Age", y="Identification", color="Status")
-
-fig_edad_mortalidad = px.line(edad_egresos_fallecidos,
-                          x="Age", y="Identification", color="Status")
-
-fig_comor_day = px.line(comor_day, x="Day", y= "Diabetes")
-
-figura3 = px.bar(sexo_egresos, x='Sex', y="Identification", color='Status')
 
 
 
@@ -472,7 +468,7 @@ home = html.Div([
                                 html.H3("Dashboard", style = {"color": "#66666"}),
                                 html.P(
                                     '''Here you can find graphs, data analysis and comments about 
-                                    france census during 1968 and 2016
+                                    france census from 1968 to 2016
                                     
                                     ''',
                                     className="card-text", style = {"font-size": "15px"},
@@ -492,14 +488,14 @@ home = html.Div([
                         dbc.CardBody(
                             [
 
-                                html.H3("Spatial Model", style = {"color": "#66666"}),
+                                html.H3("Cluster Model", style = {"color": "#66666"}),
 
                                 html.P(
-                                    '''Cluster Model is a model that groups the municipalities of France by euclidean distance
+                                    '''Model that groups the municipalities of France by euclidean distance
                                     of similarity during the years of the census''',
                                     className="card-text", style = {"font-size": "15px"},
                                 ),
-                                dbc.Button("Spatial Model",
+                                dbc.Button("Cluster Model",
                                            color="primary", href="/page-2"),
                             ],
                             className="text-center"
@@ -508,27 +504,30 @@ home = html.Div([
                     style={"width": "18rem"},
                 ),
 
-                # dbc.Card(
-                #     [
-                #         dbc.CardImg(
-                #             src="/assets/images/risk_death.jpeg", top=True),
-                #         dbc.CardBody(
+                dbc.Card(
+                    [
+                        dbc.CardImg(
+                            src="/assets/images/map.png", top=True),
+                        dbc.CardBody(
 
-                #             [  html.H3("Risk of Death", style = {"color": "#66666"}),
+                            [  html.H3("Exploration", style = {"color": "#66666"}),
 
-                #                 html.P(
-                #                     "Model for calculated the probability of death due to COVID-19 and their relations with comorbidities and age.",
-                #                     className="card-text", style = {"font-size": "15px"},
-                #                 ),
+                                html.P(
+                                    '''
+                                    Explore and overview data from different open 
+                                    ources related to the demographics and services behaviour in France
+                                    ''',
+                                    className="card-text", style = {"font-size": "15px"},
+                                ),
 
-                #                 dbc.Button("Risk Death Model", color="primary",
-                #                            href="/page-3", style={"align": "center"}),
-                #             ],
-                #             className="text-center"
-                #         ),
-                #     ],
-                #     style={"width": "18rem", "margin": "0 0 0 1rem"},                
-                #     )
+                                dbc.Button("Exploration", color="primary",
+                                           href="/page-3", style={"align": "center"}),
+                            ],
+                            className="text-center"
+                        ),
+                    ],
+                    style={"width": "18rem", "margin": "0 0 0 1rem"},                
+                    )
 
             ]),
 
@@ -740,7 +739,7 @@ aboutus = html.Div([
 
             html.Div([
 
-                 dbc.CardImg(src="assets/images/profiles/ocampo.jpeg",
+                 dbc.CardImg(src="assets/images/profiles/ocampo.jpg",
                              top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
                  dbc.CardBody([
                      html.H4("David Ocampo",
@@ -749,16 +748,18 @@ aboutus = html.Div([
                          html.A([
                                 html.I(className="fa fa-linkedin"),
                                 html.I(className="fa fa-linkedin cyan-600"),
-                                ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/alejandro-ospina-cortés-317125158/"),
+                                ], className="btn btn-icon btn-social rounded white btn-sm", 
+                                href="https://www.linkedin.com/in/david-alejandro-o-710247163/"),
 
                          html.A([
                              html.I(className="fa fa-envelope"),
                              html.I(className="fa fa-envelope red-600"),
-                         ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:aospinacortes@gmail.com"),
+                         ], className="btn btn-icon btn-social rounded white btn-sm", 
+                            href="mailto:daocampol@unal.edu.co"),
 
                      ], className="block clearfix m-b"),
                      html.P(
-                         "Mathematician, Analytics Analyst at Accenture",
+                         "Statistician at Allianz. Universidad Nacional. Universidad de Los Andes.",
                          className="text-muted",
                      ),
 
@@ -789,16 +790,16 @@ aboutus = html.Div([
                          html.A([
                                 html.I(className="fa fa-linkedin"),
                                 html.I(className="fa fa-linkedin cyan-600"),
-                                ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/fabian-gamboa-01900b155"),
+                                ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/juan-felipe-torres-piza-3b5108195"),
 
                          html.A([
                              html.I(className="fa fa-envelope"),
                              html.I(className="fa fa-envelope red-600"),
-                         ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:fagamboas@unal.edu.co"),
+                         ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:jf.torrep@uniandes.edu.co"),
 
                      ], className="block clearfix m-b"),
                      html.P(
-                         "Economist, Campaign's Structure Analyst, Seguros Bolívar.",
+                         "Computer and Systems Engineering student and Designer student. Universidad de Los Andes.",
                          className="text-muted",
                      ),
 
@@ -820,7 +821,7 @@ aboutus = html.Div([
 
             html.Div([
 
-                dbc.CardImg(src="/assets/images/profiles/quinonez.jpeg",
+                dbc.CardImg(src="/assets/images/profiles/quinonez.png",
                             top=True, className="img-circle", style = {"margin-top": "1.125rem"}),
                 dbc.CardBody([
                     html.H4("Juan David Quiñonez",
@@ -829,16 +830,16 @@ aboutus = html.Div([
                         html.A([
                             html.I(className="fa fa-linkedin"),
                             html.I(className="fa fa-linkedin cyan-600"),
-                        ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/fabian-pallares-jaimes-643118164/"),
+                        ], className="btn btn-icon btn-social rounded white btn-sm", href="https://www.linkedin.com/in/juandavidq/"),
 
                         html.A([
                             html.I(className="fa fa-envelope"),
                             html.I(className="fa fa-envelope red-600"),
-                        ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:fabianpallares23@gmail.com"),
+                        ], className="btn btn-icon btn-social rounded white btn-sm", href="mailto:jdquinoneze@unal.edu.co"),
 
                     ], className="block clearfix m-b"),
                     html.P(
-                        "Statistician",
+                        "Statistician at Banco de Bogotá. Universidad Nacional. Universidad de Los Andes.",
                         className="text-muted",
                     ),
 
@@ -861,48 +862,3 @@ aboutus = html.Div([
 
 
 ])
-
-
-# @app.callback(
-#     Output('positives', 'figure'),
-#     [Input('pos_daily', 'n_clicks'),
-#      Input('pos_weekly', 'n_clicks'), Input('base select', 'value')])
-# def update_posfig(pos_daily, pos_weekly, base select):
-#     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-
-#     if(len(base select) == 1):
-#         if(button_id == "pos_daily"):
-#             return fig_dia_positivos_acu
-#         elif(button_id == "pos_weekly"):
-#             return fig_semana_positivos_acu
-#         return fig_dia_positivos_acu
-
-#     if(button_id == "pos_daily"):
-#         return fig_dia_positivos
-#     elif(button_id == "pos_weekly"):
-#         return fig_semana_positivos
-
-#     return fig_dia_positivos
-
-
-
-# @app.callback(
-#     Output('death', 'figure'),
-#     [Input('death_daily', 'n_clicks'),
-#      Input('death_weekly', 'n_clicks'), Input('death_cum', 'value')])
-# def update_deathfig(pos_daily, pos_weekly, base select):
-#     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-
-#     if(len(base select) == 1):
-#         if(button_id == "death_daily"):
-#             return fig_dia_fallecidos_acu
-#         elif(button_id == "death_weekly"):
-#             return fig_semana_fallecidos_acu
-#         return fig_dia_fallecidos_acu
-
-#     if(button_id == "death_daily"):
-#         return fig_dia_fallecidos
-#     elif(button_id == "death_weekly"):
-#         return fig_semana_fallecidos
-
-#     return fig_dia_fallecidos

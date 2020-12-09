@@ -10,7 +10,7 @@ import numpy as np
 import plotly.express as px
 import json
 
-from layouts import top_cards
+from layouts import ans, cod_reg, cod_dep ,dict_base, CRN
 
 # Data
 padding_top = -430
@@ -55,8 +55,27 @@ fig_lines = px.line(df_comunas, x="Fecha", y="Pronóstico", line_group="Nombre C
 # ---------------------------------------------------------------------------- Spatial Model
 spatial = html.Div([
 
-    top_cards,
+      dbc.Row(
+        [
+            dbc.Col(
+                [
+                    dbc.Card(
+                        [
+                            dbc.CardBody(
+                                [
 
+                                    html.H3("Cluster Analysis",
+                                            className="card-title"),
+ 
+                                ]
+                            ),
+                        ],
+                    )
+                ],
+                className="mt-1 mb-2 pl-3 pr-3"
+            ),
+        ],
+    ),
     dbc.Row(
         [
             dbc.Col(
@@ -65,13 +84,29 @@ spatial = html.Div([
                         [
                             dbc.CardBody(
                                 [
-                                    html.H5("Number of Covid-19 cases per comuna",
-                                            className="card-title"),
-                                    dbc.Alert(
-                                        "Spatial Model is a model can predict the numbers of infected people for COVID throught the time. Please select the  date to visualize.", color="info", dismissable=True,),
 
-                                    dcc.Graph(figure=fig_spatial,
-                                              id='spatial_model'),
+                                    dbc.RadioItems(
+                                        options=[
+                                            {"label": "Region", "value": 0},
+                                            {"label": "Department", "value": 1}
+                                        ],
+                                        value=0,
+                                        id="cluster base",
+                                        # switch=True,
+                                        # className="md",
+                                        style={'display': 'inline-block'}
+                                    ),
+                                    dbc.RadioItems(
+                                        options=[
+                                            {"label": dict_base[i], "value": i} for i in dict_base.keys()
+                                        ],
+                                        value=0,
+                                        id="cluster option",
+                                        # switch=True,
+                                        # className="md",
+                                        style={'display': 'inline-block'}
+                                    ),
+
                                 ]
                             ),
                         ],
@@ -82,7 +117,8 @@ spatial = html.Div([
         ],
     ),
 
-    dbc.Row(
+
+      dbc.Row(
         [
             dbc.Col(
                 [
@@ -90,13 +126,22 @@ spatial = html.Div([
                         [
                             dbc.CardBody(
                                 [
-                                    html.H5("Number of Covid-19 cases per comuna (Bars)",
-                                            className="card-title"),
-                                    dbc.Alert(
-                                        " Please select the  date to visualize.", color="info", dismissable=True,),
 
-                                    dcc.Graph(figure=fig_bars,
-                                              id='spatial_model_bars'),
+                                    html.H3("Time Cluster Analysis",
+                                            className="card-title"),
+                                    dcc.Slider(
+                                        min=min(ans),
+                                        max=max(ans),
+                                        step=None,
+                                        marks={
+                                            i: i for i in ans
+                                        },
+                                        value=ans[0],
+                                        id='cluster slider',
+                                        included=False
+                                    ), 
+                                    dcc.Graph(id='cluster time'),
+ 
                                 ]
                             ),
                         ],
@@ -107,7 +152,7 @@ spatial = html.Div([
         ],
     ),
 
-    dbc.Row(
+      dbc.Row(
         [
             dbc.Col(
                 [
@@ -115,12 +160,38 @@ spatial = html.Div([
                         [
                             dbc.CardBody(
                                 [
-                                    html.H5("Number of Covid-19 cases per comuna  through time",
+
+                                    html.H3("Zone Cluster Analysis",
                                             className="card-title"),
-                                    dbc.Alert(
-                                        "The following graph shows the prediction cases by commune in a line plot.", color="info", dismissable=True,),
-                                    dcc.Graph(figure=fig_lines,
-                                              id='spatial_model_lines'),
+                                    dcc.Dropdown(
+                                        clearable=False,
+                                        # className="float-right",
+                                        id="cluster list",
+                                        style=dict(
+                                            width='50%',
+                                            verticalAlign="middle", 
+                                            # position = "fixed",
+                                            # top      = "0px",
+                                            # right    = "0px"
+                                        )
+                                    ),
+                                    dcc.Dropdown(
+                                        clearable=False,
+                                        # className="float-right",
+                                        id="cluster ans",
+                                        options=[
+                                            {'label': i, 'value': i} for i in ans
+                                        ],
+                                        style=dict(
+                                            width='50%',
+                                            verticalAlign="middle", 
+                                            # position = "fixed",
+                                            # top      = "0px",
+                                            # right    = "0px"
+                                        )
+                                    ),
+                                    dcc.Graph(id='cluster zone'),
+ 
                                 ]
                             ),
                         ],
@@ -130,7 +201,6 @@ spatial = html.Div([
             ),
         ],
     ),
-
 
 
 ],
