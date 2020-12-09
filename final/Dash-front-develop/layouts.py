@@ -230,6 +230,35 @@ nombre_variables={
     "CSP" : "Catégorie socioprofessionnelle (en 8 postes)"
 }
 
+dict_base={
+    1:'Naissance',
+    2: 'Travail',
+    3: 'Résidence',
+    4: 'Résidence antérieure'
+    }
+
+
+def seleccion_base(base,opcion):
+    df = pd.DataFrame()
+    if base == 0  and opcion == 1:
+        df=RN
+    elif base == 0  and opcion == 2:
+        df=RT
+    elif base == 0  and opcion == 3:
+        df=RRE
+    elif base == 0  and opcion == 4:
+        df=RRA
+    elif base == 1  and opcion == 1:
+        df=DN
+    elif base == 1  and opcion == 2:
+        df=DT
+    elif base == 1  and opcion == 3:
+        df=DRE
+    elif base == 1  and opcion == 4:
+        df=DRA
+    return df
+
+
 # CSVS
 
 ruta='Data/'
@@ -243,10 +272,18 @@ for archivo in os.listdir(ruta):
         data.append(archivo)
 
 #Resúmen de región
-RN=pd.read_csv(ruta+data[1],sep=';')
-RRE=pd.read_csv(ruta+data[0],sep=';')
-RT=pd.read_csv(ruta+data[2],sep=';')
-RRA=pd.read_csv(ruta+data[3],sep=';')
+RN=pd.read_csv(ruta+'RESUMEN_REG_NAIS.csv',sep=';')
+RRE=pd.read_csv(ruta+'RESUMEN_REG_RES_18.csv',sep=';')
+RT=pd.read_csv(ruta+'RESUMEN_REG_TRA_18.csv',sep=';')
+RRA=pd.read_csv(ruta+'RESUMEN_REG_RAN_18.csv',sep=';')
+
+
+#Resúmen de departamento
+DN=pd.read_csv(ruta+'RESUMEN_DEP_NAIS.csv',sep=';')
+DRE=pd.read_csv(ruta+'RESUMEN_DEP_RES_18.csv',sep=';')
+DT=pd.read_csv(ruta+'RESUMEN_DEP_TRA_18.csv',sep=';')
+DRA=pd.read_csv(ruta+'RESUMEN_DEP_RAN_18.csv',sep=';')
+
 
 
 dia_fallecidos = pd.read_csv("Data/mortalidad_dia.csv")
@@ -317,7 +354,7 @@ top_cards = dbc.Row([
                 dbc.CardBody(
                     [
                         html.H5(
-                            "Total Population of France", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
+                            "France Population", className="card-title text-muted font-weight-normal mt-2 mb-3 mr-5"),
                         html.H4(id="total population"),
 
                      ],
@@ -543,6 +580,49 @@ home = html.Div([
 dashboard = html.Div([
 
     top_cards,
+       dbc.Row(
+        [
+            dbc.Col(
+                [
+                    dbc.Card(
+                        [
+                            dbc.CardBody(
+                                [
+
+                                    html.H3("Analysis Selection",
+                                            className="card-title",
+                                            id="seleccion analisis"),
+                                    dbc.RadioItems(
+                                        options=[
+                                            {"label": "Region", "value": 0},
+                                            {"label": "Department", "value": 1}
+                                        ],
+                                        value=0,
+                                        id="base select",
+                                        # switch=True,
+                                        # className="md",
+                                        style={'display': 'inline-block'}
+                                    ),
+                                    dbc.RadioItems(
+                                        options=[
+                                            {"label": dict_base[i], "value": i} for i in dict_base.keys()
+                                        ],
+                                        value=0,
+                                        id="option select",
+                                        # switch=True,
+                                        # className="md",
+                                        style={'display': 'inline-block'}
+                                    ),
+
+                                ]
+                            ),
+                        ],
+                    )
+                ],
+                className="mt-1 mb-2 pl-3 pr-3"
+            ),
+        ],
+    ),
 
 
 
@@ -568,16 +648,6 @@ dashboard = html.Div([
                                         )
                                     ),
 
-                                    dbc.RadioItems(
-                                        options=[
-                                            {"label": "Region", "value": 1},
-                                            {"label": "Department", "value": 0}
-                                        ],
-                                        value=0,
-                                        id="base select",
-                                        # switch=True,
-                                        className="md",
-                                    ),
                                     dcc.Slider(
                                         min=min(ans),
                                         max=max(ans),
@@ -586,7 +656,8 @@ dashboard = html.Div([
                                             i: i for i in ans
                                         },
                                         value=ans[0],
-                                        id='dash slider'
+                                        id='dash slider',
+                                        included=False
                                     ),  
 
                                     html.H5("Drill down analysis",
@@ -624,8 +695,7 @@ dashboard = html.Div([
                                     html.H5("Regions Analysis",
                                             className="card-title"),
 
-                                    dcc.Graph(figure=edad_mortalidad,
-                                              id='dash region'),
+                                    dcc.Graph(id='dash region'),
                                 ]
                             ),
                         ],
@@ -643,8 +713,7 @@ dashboard = html.Div([
                                     html.H5("Time Analysis",
                                             className="card-title"),
 
-                                    dcc.Graph(figure=figura3,
-                                              id='dash time'),
+                                    dcc.Graph(id='dash time'),
                                 ]
                             ),
                         ],

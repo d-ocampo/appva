@@ -1,4 +1,4 @@
-from layouts import home, dashboard, aboutus,  RN, RRE, RT, RRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables
+from layouts import home, dashboard, aboutus,  RN, RRE, RT, RRA, dict_variables,cod_dep, cod_reg,cod_csp,cod_dep,cod_dipl,cod_natio,cod_nes,cod_reg,cod_sexe, cod_stat,cod_typ, dict_variables,nombre_variables,dict_base,nombre_variables, seleccion_base
 from lay import  risk
 
 from app_ import app
@@ -241,7 +241,7 @@ def update_topTitle(pathname):
     [Input("base select", "value")],
 )
 def place(value):
-    if value==1:
+    if value==0:
         return "Region"
     else: 
         return "Department"
@@ -253,7 +253,7 @@ def place(value):
     [Input("base select", "value")],
 )
 def list_names(value):
-    if value==1:
+    if value==0:
         return [{'label': cod_reg[i], 'value': i} for i in cod_reg.keys()]
     else: 
         return [{'label': cod_dep[i], 'value': i} for i in cod_dep.keys()] 
@@ -265,7 +265,7 @@ def list_names(value):
      Input("base select", "value"),],
 )
 def list_names(value,terrain):
-    if terrain==1:
+    if terrain==0:
         return cod_reg[value]
     else: 
         return cod_dep[value]
@@ -282,26 +282,86 @@ def list_names(value):
 
 @app.callback(
     [Output("dash drill", "figure"),
-     Output("total population", "children"),],
+     Output("total population", "children")],
     [Input("dash slider", "value"),
      Input("base select", "value"),
      Input("name list", "value"),
-     Input("variable", "value")
+     Input("variable", "value"),
+     Input("option select", "value")
      ],
 )
-def list_names(year, base,terreno,var):
-    prueba=RN[RN['ANS']==int(year)]
+def bar_graph(year, base,terreno,var,opcion):
+    df=seleccion_base(int(base),int(opcion))
+    prueba=df[df['ANS']==int(year)]
     # print(year,base,terreno,len(prueba))
     total=round(prueba[dict_variables["SEXE"]].sum().sum())
     total="{:,}".format(int(total))
-    print(total)
-    if base==1:
+    print(year, base,terreno,var,opcion)
+    # print(cod_dep[terreno])
+    if int(base)==0:
         x=dict_variables[var]
         y=prueba[prueba['REGION']==cod_reg[terreno]][dict_variables[var]].values.tolist()[0]
-    fig2 = px.bar(prueba, y=dict_variables[var], x='REGION')
-
+    else:
+        x=dict_variables[var]
+        y=prueba[prueba['REGION']==cod_dep[terreno]][dict_variables[var]].values.tolist()[0]
     fig = go.Figure([go.Bar(x=x, y=y)])
     return fig, total
+
+
+#Gráfico de comparación de región
+
+@app.callback(
+    Output("dash region", "figure"),
+    [Input("dash slider", "value"),
+     Input("base select", "value"),
+     Input("name list", "value"),
+     Input("variable", "value"),
+     Input("option select", "value")
+     ],
+)
+def region_graph(year, base,terreno,var,opcion):
+    df=seleccion_base(int(base),int(opcion))
+    prueba=df[dict_variables[var]+['ANS','REGION']]
+    prueba=prueba[prueba['ANS']==int(year)]
+    fig = px.bar(prueba, y=dict_variables[var], x='REGION')
+    return fig
+
+#Gráfico de línea de tiempo
+
+@app.callback(
+    Output("dash time", "figure"),
+    [Input("dash slider", "value"),
+     Input("base select", "value"),
+     Input("name list", "value"),
+     Input("variable", "value"),
+     Input("option select", "value")
+     ],
+)
+def time_graph(year, base,terreno,var,opcion):
+    df=seleccion_base(int(base),int(opcion))
+    if int(base)==0:
+        fig = px.line(df[df['REGION']==cod_reg[terreno]].sort_values(by=['ANS']), x="ANS", y=dict_variables[var])
+    else:
+        fig = px.line(df[df['REGION']==cod_dep[terreno]].sort_values(by=['ANS']), x="ANS", y=dict_variables[var])      
+    return fig
+
+#Cambiar nombre de la selección de la base
+@app.callback(
+    Output("seleccion analisis", "children"),
+    [Input("base select", "value"),
+     Input("option select", "value")
+     ],
+)
+def analysis_name(base,opcion):
+    if int(base)==0:
+        text='Analysis of "Region de '+ dict_base[opcion]+'"'
+    else:
+        text='Analysis of "Deparment de '+ dict_base[opcion]+'"'      
+    return text
+
+
+
+
 
 
 
